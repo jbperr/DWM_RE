@@ -1,4 +1,5 @@
 # Projects
+
 ### [McDonald's EDA and Biscuits and Gravy](https://mcbiscuits.herokuapp.com/)
   - Reverse-engineered McDonald's API to:
     - Scrape store information:
