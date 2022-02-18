@@ -1,3 +1,4 @@
+# Projects
 ### [McDonald's EDA and Biscuits and Gravy](https://mcbiscuits.herokuapp.com/)
   - Reverse-engineered McDonald's API to:
     - Scrape store information:
@@ -10,3 +11,9 @@
 - Expanded on the previous project to scrape the location data from most major food chains in the US
  - Data is still currently being gathered. 
     - Currently have gathered info from 17 chains and over 65,000 individual stores.
+
+# Technical Skills
+- Python
+- Data cleaning, processing, visualization
+- Web scraping
+- SQL
