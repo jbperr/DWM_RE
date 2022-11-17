@@ -38,7 +38,7 @@ The first command is loading, or copying, the value in register `a` to register 
 The second command is adding the value in `hl` into the value in `hl`. This  multiplies whatever value is in `hl` by two. 
 The third command loads `a` with the byte that is stored in RAM at position `C899`. 
 
-See? Not too bad, just some syntax to get used to.
+See? Not too bad, just some syntax to get used to. Then, I set a breakpoint so anytime the game tries to read or write any data to the SRAM (the portion where the save is stored) the emulator pauses and I can see what the game is doing in the assembly.
 
 ## Monsters
 
