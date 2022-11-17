@@ -32,7 +32,10 @@ Now that the encoding table is done, I can import a text encoding file into my h
 
 Now we can really dig into this save file! But wouldn't it be easier to understand how the save is structured if we could arbitrarily change any byte? Yes!
 
+A json of the character encoding can be found [here](https://github.com/jbperr/DragonWarriorMonstersRE/blob/main/Encoding_Tables/characters.json).
+
 It was nice that we could change a byte by changing another byte in the opposite way, however, there are a few limitations on that method. If we instead reversed the checksum, we could do anything to the save file and then generate a checksum that would trick the game into thinking the save is legit. So let's do it!
+
 # Checksum
 
 If you remember, the checksum is just a simple sum across the whole file. So that result must be stored somewhere we just have to find out where. The quickest way I thought of doing that is going straight to the source and examining the assembly of the game as it saves. That way I can see what bytes are stored, when and where they get stored, and how they get stored there. Using an amazing Game Boy emulator called [Emulicious](https://emulicious.net/), I can use the Debugger to view the disassembly of the game's code to see what is happening. We can view things such as `ld b, a` and `add hl, hl` and `ld a, [_RAM_C899_]`. Perfect! Now we know exactly what is happening, right? Well, after a few days of reading the [Pan Docs](https://gbdev.io/pandocs/CPU_Instruction_Set.html) and the [RGBDS docs](https://rgbds.gbdev.io/docs/v0.6.0/gbz80.7/), yes!
@@ -106,6 +109,12 @@ From here on I will go into less detail and just document what I found without a
 
 The first farm section begins at byte 507 and the second farm section begins at byte 4388. Each monster is 149 bytes long. Therefore, in the first farm, the second monster starts at byte 656, the third monster starts at byte 805, etc. There are still some things to figure out, the biggest being the 30 unknown bytes from +101 to +130, but that will eventually be found. My findings can be summarized by this table.
 
+ A json with the monster IDs can be found [here](https://github.com/jbperr/DragonWarriorMonstersRE/blob/main/Encoding_Tables/monsters.json).
+
+ A json with the family IDs can be found [here](https://github.com/jbperr/DragonWarriorMonstersRE/blob/main/Encoding_Tables/family.json).
+ 
+ A json with the skill IDs can be found [here](https://github.com/jbperr/DragonWarriorMonstersRE/blob/main/Encoding_Tables/skills.json).
+
 |  <br>+0 : 507 : 1 byte  	|  <br>Bred/Farm/Party (00/01/02)  	|
 |---	|---	|
 |  <br>+1 to + 4 : 508-511 : 4 bytes  	|  <br>Monster name  	|
@@ -144,8 +153,12 @@ The first farm section begins at byte 507 and the second farm section begins at 
 ### Library
 COMING SOON
 ## Inventory
-COMING SOON
-### Bank/Vault
+
+The inventory takes up 20 bytes total between bytes 395-414. 
+
+A json with the item IDs can be found [here](https://github.com/jbperr/DragonWarriorMonstersRE/blob/main/Encoding_Tables/items.json).
+
+## Bank/Vault
 COMING SOON
 ## Settings
 COMING SOON
