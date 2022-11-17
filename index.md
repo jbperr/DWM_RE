@@ -3,7 +3,7 @@
 
 Dragon Warrior Monsters (DWM) is one of my favorite childhood video games. I would always find myself playing it over and over again. It is similar to Pokemon in its monster collecting and monster fighting game-loop. DWM allows you to tame monsters, that live behind portals called gates, and battle those monsters in a tournament with the eventual goal of saving your sister. 
 
-This past couple years I have gotten interested in reverse engineering and trying to understand how things work. After seeing what [PKHeX](https://github.com/kwsch/PKHeX) can do with Pokemon saves, I wanted to see what I could make for DWM. The save file structure has been extensively studied and documented for every Pokemon game; whereas, for DWM there really is not much. I would have to go from the ground up. I decided to start by looking at the save file structure for [Generation 2 Pokemon](https://bulbapedia.bulbagarden.net/wiki/Save_data_structure_%28Generation_II%29) as it would most likely be the most similar as the games were made around the same time (1998 for DWM and 1999 for Pokemon Gold/Silver). I knew that the save structures wouldn't be the exact same, but it allowed me to spot some patterns such as using a [similar structure](https://bulbapedia.bulbagarden.net/wiki/Save_data_structure_%28Generation_II%29#Pok.C3.A9dex_owned.2C_Pok.C3.A9dex_seen) to store whether a certain Pokemon or certain monster or how the checksum is used to validate the save. To start, I just opened up the save in a hex editor to see what was going on. But hold on, what even is a Game Boy save?
+This past couple years I have gotten interested in reverse engineering and trying to understand how things work. After seeing what [PKHeX](https://github.com/kwsch/PKHeX) can do with Pokemon saves, I wanted to see what I could make for DWM. The save file structure has been extensively studied and documented for every Pokemon game; whereas, for DWM there really is not much. I would have to go from the ground up. I decided to start by looking at the save file structure for [Generation 2 Pokemon](https://bulbapedia.bulbagarden.net/wiki/Save_data_structure_%28Generation_II%29) as it would most likely be the most similar as the games were made around the same time (1998 for DWM and 1999 for Pokemon Gold/Silver). I knew that the save structures wouldn't be the exact same, but it allowed me to spot some patterns such as using a [similar structure](https://bulbapedia.bulbagarden.net/wiki/Save_data_structure_%28Generation_II%29#Pok.C3.A9dex_owned.2C_Pok.C3.A9dex_seen) to store whether a certain Pokemon or certain monster had been captured or how the checksum is used to validate the save. To start, I just opened up the save in a hex editor to see what was going on. But hold on, what even is a Game Boy save?
 
 
 ## Game Boy Saves
@@ -12,7 +12,7 @@ All Game Boy games that had a save file (Pokemon Gold, Zelda: Link's Awakening, 
 
 ## DWM Character Encoding
 
-`FC 77 01 00 02 00 00 03 01 00 40 18 01 80 B8 00 11 0B 18 01 B8 00 E0 01 00 01 00 00 00 00 78 00 38 00 0F 4F 01 02 00 00 00 03 C0 06 D5 CE E5 D5 00 3B 01 00 00 09 00 E8 00 48 00 02 03 11 00 00 05 80 07 14 9A 1C A7 03 07 00 00 14 9A 00 02 00 00 FF FF B4 9B 00 00 02 04 FF 00 00 00 00 00 05 FF D8 00 B8 00 00 00 00 00 00 8E CA 01 02 01 15 0C 0A 0A 04 1D 45 03 0F 00 00 F9 C5 C9 F6 67 0A ...`
+`FC 77 01 00 02 00 00 03 01 00 40 18 01 80 B8 00 11 0B 18 01 B8 00 E0 01 00 01 00 00 00 00 78 00 38 00 0F 4F 01 02 00 00 00 03 C0 06 D5 CE E5 D5 00 3B 01 00 00 09 00 E8 00 48 00 02 03 11 00 00 05 80 07 14 9A 1C A7 03 07 00 00 14 9A 00 02 00 00 FF FF B4 9B 00 00 02 04 FF 00 00 00 00 00 05 FF D8 00 B8 00 00 00 00 00 00 8E CA 01 02 01 15 0C 0A 0A 04 1D 45 03 0F 00 00 F9 C5 C9 F6 67 0A`
 
 Here are the first 128 of 8192 bytes of the the save file. At first, it is a lot to look at. But after reading the page on [Pokemon character encoding](https://bulbapedia.bulbagarden.net/wiki/Character_encoding_(Generation_II)), I figured the first step is to figure out how the text gets stored. I did this by starting up a new save and naming myself `AAAA` so that I can then look in the save file for four bytes that repeat themself. After examining that save file, I found where your name gets stored. Here are bytes 374-384.   
 
@@ -57,3 +57,5 @@ COMING SOON
 COMING SOON
 ## Conclusion and Future To-D0
 COMING SOON
+
+Last Updated: 11/16/2022
