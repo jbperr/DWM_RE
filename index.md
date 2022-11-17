@@ -105,39 +105,40 @@ From here on I will go into less detail and just document what I found without a
 ## Monsters
 
 The first farm section begins at byte 507 and the second farm section begins at byte 4388. Each monster is 149 bytes long. Therefore, in the first farm, the second monster starts at byte 656, the third monster starts at byte 805, etc. There are still some things to figure out, the biggest being the 30 unknown bytes from +101 to +130, but that will eventually be found. My findings can be summarized by this table.
-|   +0 : 507 : 1 byte                  	|   Bred/Farm/Party (00/01/02)                                                                                                                                                                         	|
-|--------------------------------------	|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
-|   +1 to + 4 : 508-511 : 4 bytes      	|   Monster name                                                                                                                                                                                       	|
-|   +5 to +8 : 512-515 : 4 bytes       	|   F0 F0 F0 F0 spacer                                                                                                                                                                                 	|
-|   +9 : 516 : 1 byte                  	|   MONSTER ID                                                                                                                                                                                         	|
-|   +10 : 517 : 1 byte                 	|   Family (00-09)                                                                                                                                                                                     	|
-|   +11 : 518 : 1 byte                 	|   Sex (00-Male 01-Female)                                                                                                                                                                            	|
-|   +12 to +15 : 519 - 522 : 4 bytes   	|   OG Masters name                                                                                                                                                                                    	|
-|   +16 to +19 : 523 - 526 : 4 bytes   	|   F0 F0 F0 F0 spacer                                                                                                                                                                                 	|
-|   +20 : 527 : 1 byte                 	|   Unknown                                                                                                                                                                                            	|
-|   +21 to +22 : 528 - 529 : 2 bytes   	|   Concatenated Parents ID                                                                                                                                                                            	|
-|   +23 to +26 : 530 - 533 : 4 bytes   	|   Dad’s Master                                                                                                                                                                                       	|
-|   +27 to +30 : 534 - 537 : 4 bytes   	|   F0 F0 F0 F0 spacer                                                                                                                                                                                 	|
-|   +31 : 538 : 1 byte                 	|   Unknown                                                                                                                                                                                            	|
-|   +32 to +35 : 539 - 542 : 4 bytes   	|   Mom’s Master                                                                                                                                                                                       	|
-|   +36 to +39 : 543 - 546 : 4 bytes   	|   F0 F0 F0 F0 spacer                                                                                                                                                                                 	|
-|   +40 : 547 : 1 byte                 	|   Unknown                                                                                                                                                                                            	|
-|   +41 to +73 : 548 - 580 : 33 bytes  	|   Skills monster has learned/can learn. The first 8 bytes are currently learned skills. Everything past that is skills that can be learned.                                                          	|
-|   +74 : 581 : 1 byte                 	|   Unknown                                                                                                                                                                                            	|
-|   +75 : 582 : 1 byte                 	|   Current level                                                                                                                                                                                      	|
-|   +76 : 583 : 1 byte                 	|   Max level                                                                                                                                                                                          	|
-|   +77 to +79 : 584 - 586 : 3 bytes   	|   Total Exp                                                                                                                                                                                          	|
-|   +80 to +97 : 587 - 604 : 18 bytes  	|   Stats (Current HP, Total HP, Current MP, Total MP, ATK, DEF, AGL, INT, WLD) Each gets 2 bytes incase it goes over 255. If over 255 it is little endian. 271 (0x010f) would be stored as 0x0F 0x01  	|
-|   +98 : 605 : 1 byte                 	|   Breeding plus                                                                                                                                                                                      	|
-|   +99 : 606 : 1 byte                 	|   00 is hatched. 01 is unhatched/egg form                                                                                                                                                            	|
-|   +100 : 607 : 1 byte                	|   Personality value                                                                                                                                                                                  	|
-|   +101 to +130 : 608-637 : 30 bytes  	|   Unknown                                                                                                                                                                                            	|
-|   +131 to +134 : 638-641 : 4 bytes   	|   Dad’s Name                                                                                                                                                                                         	|
-|   +135 to +138 : 642-645 : 4 bytes   	|   F0 F0 F0 F0 spacer                                                                                                                                                                                 	|
-|   +139 : 646 : 1 byte                	|   Dad’s breeding plus                                                                                                                                                                                	|
-|   +140 to +143 : 647-650 : 4 bytes   	|   Mom’s Name                                                                                                                                                                                         	|
-|   +144 to +147 : 651-654 : 4 bytes   	|   F0 F0 F0 F0 spacer                                                                                                                                                                                 	|
-|   +148 : 655: 1 byte                 	|   Mom’s breeding plus                                                                                                                                                                                	|
+
+|  <br>+0 : 507 : 1 byte  	|  <br>Bred/Farm/Party (00/01/02)  	|
+|---	|---	|
+|  <br>+1 to + 4 : 508-511 : 4 bytes  	|  <br>Monster name  	|
+|  <br>+5 to +8 : 512-515 : 4 bytes  	|  <br>F0 F0 F0 F0 spacer  	|
+|  <br>+9 : 516 : 1 byte  	|  <br>MONSTER ID  	|
+|  <br>+10 : 517 : 1 byte  	|  <br>Family (00-09)  	|
+|  <br>+11 : 518 : 1 byte  	|  <br>Sex (00-Male 01-Female) 	|
+|  <br>+12 to +15 : 519 - 522 : 4 bytes  	|  <br>OG Masters name  	|
+|  <br>+16 to +19 : 523 - 526 : 4 bytes  	|  <br>F0 F0 F0 F0 spacer  	|
+|  <br>+20 : 527 : 1 byte  	|  <br>Unknown  	|
+|  <br>+21 to +22 : 528 - 529 : 2 bytes  	|  <br>Concatenated Parents ID  	|
+|  <br>+23 to +26 : 530 - 533 : 4 bytes  	|  <br>Dad’s Master  	|
+|  <br>+27 to +30 : 534 - 537 : 4 bytes  	|  <br>F0 F0 F0 F0 spacer  	|
+|  <br>+31 : 538 : 1 byte  	|  <br>Unknown  	|
+|  <br>+32 to +35 : 539 - 542 : 4 bytes  	|  <br>Mom’s Master  	|
+|  <br>+36 to +39 : 543 - 546 : 4 bytes  	|  <br>F0 F0 F0 F0 spacer  	|
+|  <br>+40 : 547 : 1 byte  	|  <br>Unknown  	|
+|  <br>+41 to +73 : 548 - 580 : 33 bytes  	|  <br>Skills monster has learned/can learn. The first 8 bytes are currently learned skills. Everything past that is skills that can be learned. 	|
+|  <br>+74 : 581 : 1 byte  	|  <br>Unknown  	|
+|  <br>+75 : 582 : 1 byte  	|  <br>Current level  	|
+|  <br>+76 : 583 : 1 byte  	|  <br>Max level  	|
+|  <br>+77 to +79 : 584 - 586 : 3 bytes  	|  <br>Total Exp  	|
+|  <br>+80 to +97 : 587 - 604 : 18 bytes  	|  <br>Stats (Current HP, Total HP, Current MP, Total MP, ATK, DEF, AGL, INT, WLD) Each gets 2 bytes incase it goes over 255. If over 255 it is little endian. 271 (0x010f) would be stored as 0x0F 0x01  	|
+|  <br>+98 : 605 : 1 byte  	|  <br>Breeding plus  	|
+|  <br>+99 : 606 : 1 byte  	|  <br>00 is hatched. 01 is unhatched/egg form  	|
+|  <br>+100 : 607 : 1 byte  	|  <br>Personality value  	|
+|  <br>+101 to +130 : 608-637 : 30 bytes  	|  <br>Unknown  	|
+|  <br>+131 to +134 : 638-641 : 4 bytes  	|  <br>Dad’s Name  	|
+|  <br>+135 to +138 : 642-645 : 4 bytes  	|  <br>F0 F0 F0 F0 spacer  	|
+|  <br>+139 : 646 : 1 byte  	|  <br>Dad’s breeding plus  	|
+|  <br>+140 to +143 : 647-650 : 4 bytes  	|  <br>Mom’s Name  	|
+|  <br>+144 to +147 : 651-654 : 4 bytes  	|  <br>F0 F0 F0 F0 spacer  	|
+|  <br>+148 : 655: 1 byte  	|  <br>Mom’s breeding plus  	|
 
 
 ### Library
