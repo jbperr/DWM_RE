@@ -47,7 +47,7 @@ See? Not too bad, just some syntax to get used to. So, I set a breakpoint to pau
 
 `_LABEL_2116_:`
 
-1. `00:2116	ldi a, [hl]` - Load `[hl]` into register `a` and then increment `[hl]`. `[hl]` is used as the byte index of the save file. So this will start at the third byte. This gives us a clue that the first two bytes might be the checksum.
+1. `00:2116	ldi a, [hl]` - Load `[hl]` into register `a` and then increment `[hl]`. `[hl]` is used as the byte index of the save file. This will start at the third byte. This gives us a clue that the first two bytes might be the checksum.
 
 2. `00:2117	add e` - Add register `e` to register `a`. 
 
@@ -67,7 +67,7 @@ See? Not too bad, just some syntax to get used to. So, I set a breakpoint to pau
 
 10. `00:2120	jr nz, _LABEL_2116_` - If the last result wasn't zero, repeat the loop again starting back at step 1. If it was zero, which means that all the bytes have been processed, then the program will go onto the next instruction and won't jump back to the beginning of the loop.
 
-
+My next step from here was to implement something quick and dirty in Python to simulate this whenever I want to.
 
 ## Monsters
 COMING SOON
