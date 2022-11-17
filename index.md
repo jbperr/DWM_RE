@@ -43,7 +43,31 @@ The first command is loading, or copying, the value in register `a` to register 
 The second command is adding the value in `hl` into the value in `hl`. This  multiplies whatever value is in `hl` by two. 
 The third command loads `a` with the byte that is stored in RAM at position `C899`. 
 
-See? Not too bad, just some syntax to get used to. Then, I set a breakpoint so anytime the game tries to read or write any data to the SRAM (the portion where the save is stored) the emulator pauses and I can see what the game is doing in the assembly.
+See? Not too bad, just some syntax to get used to. So, I set a breakpoint to pause the game anytime the game tries to read or write data to the SRAM (the portion of the game memory that stores the save). This allows me to read what is happening in the assembly as the game reads and writes the save file. After some watching and some time to understand everything, I discovered the function that generates the checksum. Here is what happens to every byte of save data with a quick explanation to the side. This function starts at the third byte (index=2).
+
+`_LABEL_2116_:`
+
+1. `00:2116	ldi a, [hl]` - Load `[hl]` into register `a` and then increment `[hl]`. `[hl]` is used as the byte index of the save file. So this will start at the third byte. This gives us a clue that the first two bytes might be the checksum.
+
+2. `00:2117	add e` - Add register `e` to register `a`. 
+
+3. `00:2118	ld e, a` - Load register `a` to register `e`. This just copies the result of the addition step back into register `e`.
+
+4. `00:2119	ld a, $00` - Load register `a` with `00`. This will just empty register `a` for the next addition step.
+
+5. `00:211B	adc d` - Add register `d` into register `a` with the carry flag. Which means if the addition in step 2 resulted in a number greater than 255, there would be a flag marked in the `f` register that signifies a carry bit. This would be added onto `d` in this step. 
+
+6. `00:211C	ld d, a` - Load the result of the last step into `d`.
+
+7. `00:211D	dec bc` - Decrement `bc`. `bc` serves as a counter for how many bytes will be processed. (8192).
+
+8. `00:211E	ld a, b` - Load `b` into `a`.
+
+9. `00:211F	or c` - OR `c` and `a`.
+
+10. `00:2120	jr nz, _LABEL_2116_` - If the last result wasn't zero, repeat the loop again starting back at step 1. If it was zero, which means that all the bytes have been processed, then the program will go onto the next instruction and won't jump back to the beginning of the loop.
+
+
 
 ## Monsters
 COMING SOON
