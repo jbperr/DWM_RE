@@ -13,7 +13,8 @@ All Game Boy games that had a save file (Pokemon Gold, Zelda: Link's Awakening, 
 
 `FC 77 01 00 02 00 00 03 01 00 40 18 01 80 B8 00 11 0B 18 01 B8 00 E0 01 00 01 00 00 00 00 78 00 38 00 0F 4F 01 02 00 00 00 03 C0 06 D5 CE E5 D5 00 3B 01 00 00 09 00 E8 00 48 00 02 03 11 00 00 05 80 07 14 9A 1C A7 03 07 00 00 14 9A 00 02 00 00 FF FF B4 9B 00 00 02 04 FF 00 00 00 00 00 05 FF D8 00 B8 00 00 00 00 00 00 8E CA 01 02 01 15 0C 0A 0A 04 1D 45 03 0F 00 00 F9 C5 C9 F6 67 0A ...`
 
-Here are the first 128 of 8192 bytes of the the save file. At first, it is a lot to look at. But after reading the page on [Pokemon character encoding](https://bulbapedia.bulbagarden.net/wiki/Character_encoding_(Generation_II)), I figured the first step is to figure out how the text gets stored. I did this by starting up a new save and naming myself `AAAA` so that I can then look in the save file for four bytes that repeat themself. After examining that save file, I found where your name gets stored. Here are bytes 374-384.
+Here are the first 128 of 8192 bytes of the the save file. At first, it is a lot to look at. But after reading the page on [Pokemon character encoding](https://bulbapedia.bulbagarden.net/wiki/Character_encoding_(Generation_II)), I figured the first step is to figure out how the text gets stored. I did this by starting up a new save and naming myself `AAAA` so that I can then look in the save file for four bytes that repeat themself. After examining that save file, I found where your name gets stored. Here are bytes 374-384.   
+
  `00 00 00 00 24 24 24 24 F0` 
 
  You can see the byte `24` repeated four times from byte 380 to byte 383. So now we know that 'A' is represented by `24`, but what about everything else? Well we could start up a new save file and name ourselves a mix of characters and then record what gets saved as our name. However, that would take a long time compared to if we could just edit the hex and then load the save to view how the name changed. So I tried just that and changed the name bytes to `25 25 25 25`. I loaded up the save to see what happened and was greeted by the game showing me there was no save game to be loaded. This is what happens when the save is corrupted or there is no save to be loaded. This tells me the game uses some kind of checksum to determine validity of a save file. From reading how Pokemon implements a checksum, I hoped it would be some sort of simple sum across the whole file and then that data would be stored somewhere in the file. If it was just a sum, then I could do this to name data  `24 24 23 25` and the game would be none the wiser. 
@@ -22,7 +23,7 @@ Here are the first 128 of 8192 bytes of the the save file. At first, it is a lot
 
 By figuring out the character encoding, one of my childhood questions had been answered. The default name for the main character in DWM is `TERRY`, but if you want a different name you are limited to only 4 total characters. The encoding table shows why this is a thing. The letters in  `TERRY` are smooshed into 4 tiles so that they can be displayed in 4 bytes. 
 
-Now that the encoding table is done, I can import a text encoding file into my hex editor, I am using Hex Fiend for macOS, so the editor can display what the game would think the bytes mean. On the side of the editor, I can see what the same 9 bytes from above would look like.
+Now that the encoding table is done, I can import a text encoding file into my hex editor, I am using Hex Fiend for macOS, so the editor can display what the game would think the bytes mean. On the side of the editor, I can see what the same 9 bytes from above would look like.   
 
 `00 00 00 00 24 24 24 24 F0`
 
