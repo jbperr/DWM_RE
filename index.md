@@ -45,13 +45,14 @@ The third command loads `a` with the byte that is stored in RAM at position `C89
 See? Not too bad, just some syntax to get used to. Then, I set a breakpoint so anytime the game tries to read or write any data to the SRAM (the portion where the save is stored) the emulator pauses and I can see what the game is doing in the assembly.
 
 ## Monsters
-
+COMING SOON
 ### Library
-
+COMING SOON
 ## Inventory
-
+COMING SOON
 ### Bank/Vault
-
+COMING SOON
 ## Settings
-
+COMING SOON
 ## Conclusion and Future To-D0
+COMING SOON
