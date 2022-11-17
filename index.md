@@ -10,7 +10,7 @@ This past couple years I have gotten interested in reverse engineering and tryin
 
 All Game Boy games that had a save file (Pokemon Gold, Zelda: Link's Awakening, DWM) had a battery in the cartridge that kept some of the cartridge's memory on all the time so that data could be kept. This is why a lot of people recently have been turning on their old Pokemon game and finding that the save has disappeared. The battery died and with it the data too. Luckily, you can replace the batteries and you can extend the life of the data; however, in order to replace the battery, the saves will get lost as the power will be cut while the battery is disconnected. There is another way to protect your saves though. A [Sanni Cart Reader](https://github.com/sanni/cartreader) can be used to read and write saves, read game roms, and much more from GB/C/A, NES, SNES, N64, SEGA consoles, etc. In 2021, I built a modification of the Sanni reader by [makho](https://github.com/makhowastaken/cartreader) to preserve all my old Game Boy game saves. Anyways, with that basic information out of the way. I dumped my save and then opened it in a hex editor to see what was going on.
 
-## DWM Character Encoding
+# DWM Character Encoding
 
 `FC 77 01 00 02 00 00 03 01 00 40 18 01 80 B8 00 11 0B 18 01 B8 00 E0 01 00 01 00 00 00 00 78 00 38 00 0F 4F 01 02 00 00 00 03 C0 06 D5 CE E5 D5 00 3B 01 00 00 09 00 E8 00 48 00 02 03 11 00 00 05 80 07 14 9A 1C A7 03 07 00 00 14 9A 00 02 00 00 FF FF B4 9B 00 00 02 04 FF 00 00 00 00 00 05 FF D8 00 B8 00 00 00 00 00 00 8E CA 01 02 01 15 0C 0A 0A 04 1D 45 03 0F 00 00 F9 C5 C9 F6 67 0A`
 
@@ -33,7 +33,7 @@ Now that the encoding table is done, I can import a text encoding file into my h
 Now we can really dig into this save file! But wouldn't it be easier to understand how the save is structured if we could arbitrarily change any byte? Yes!
 
 It was nice that we could change a byte by changing another byte in the opposite way, however, there are a few limitations on that method. If we instead reversed the checksum, we could do anything to the save file and then generate a checksum that would trick the game into thinking the save is legit. So let's do it!
-## Checksum
+# Checksum
 
 If you remember, the checksum is just a simple sum across the whole file. So that result must be stored somewhere we just have to find out where. The quickest way I thought of doing that is going straight to the source and examining the assembly of the game as it saves. That way I can see what bytes are stored, when and where they get stored, and how they get stored there. Using an amazing Game Boy emulator called [Emulicious](https://emulicious.net/), I can use the Debugger to view the disassembly of the game's code to see what is happening. We can view things such as `ld b, a` and `add hl, hl` and `ld a, [_RAM_C899_]`. Perfect! Now we know exactly what is happening, right? Well, after a few days of reading the [Pan Docs](https://gbdev.io/pandocs/CPU_Instruction_Set.html) and the [RGBDS docs](https://rgbds.gbdev.io/docs/v0.6.0/gbz80.7/), yes!
 
@@ -67,10 +67,45 @@ See? Not too bad, just some syntax to get used to. So, I set a breakpoint to pau
 
 10. `00:2120	jr nz, _LABEL_2116_` - If the last result wasn't zero, repeat the loop again starting back at step 1. If it was zero, which means that all the bytes have been processed, then the program will go onto the next instruction and won't jump back to the beginning of the loop.
 
-My next step from here was to implement something quick and dirty in Python to simulate this whenever I want to.
+It is important to note that registers `d` and `e` do not start at `00`, they start at `46` and `38` respectively. In steps 3 and 6, the result of the addtion gets stored in registers `d` and `e`. So if we pay attention to these registers at the end of this process and then look for those bytes in the save file we can figure out where the checksum is stored. And that just so happens to be the first two bytes of the file. Right before where the checksum math starts. Perfect!
+
+My next step from here was to implement something quick in Python to simulate this whenever I want to. You can find this [here](https://github.com/jbperr/DragonWarriorMonstersRE/blob/main/checksum.py), but here is the main loop.
+```
+for i in range(2, 8192):
+    a = save[i] # 1 - LOAD SRAM TO A
+
+    a += e      # 2 - ADD E TO A. If over 255, F becomes a carry flag
+
+    if len(hex(a)) == 5:
+        a -= carry
+        f += 1
+
+    e = a       # 3 - LOAD A INTO E
+    
+    a = 0x00    # 4 - LOAD $00 TO A
+    
+    a += d      # 5 - ADD D AND CARRY TO A
+
+    if f != 0:
+        a += f
+        f = 0x00
+
+    if len(hex(a)) == 5:
+        a -= carry
+
+    d = a       # 6 - LOAD A INTO D
+```
+
+Now that we have total control over how the save validates itself, let's move on and figure out what the rest of the save means.
+
+# Interlude
+
+From here on I will go into less detail and just document what I found without a narrative. Everything found is just using a combination of the character encoding to find names and editing the savefile with the checksum to figure out what data controls what.
 
 ## Monsters
-COMING SOON
+
+
+
 ### Library
 COMING SOON
 ## Inventory
@@ -82,4 +117,4 @@ COMING SOON
 ## Conclusion and Future To-D0
 COMING SOON
 
-Last Updated: 11/16/2022
+Last Updated: 11/17/2022
