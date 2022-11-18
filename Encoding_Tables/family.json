@@ -1,0 +1,14 @@
+{
+    "FamilyID": {
+        "0x00": "Slime Family",
+        "0x01": "Dragon Family",
+        "0x02": "Beast Family",
+        "0x03": "Plant Family",
+        "0x04": "Bird Family",
+        "0x05": "Bug Family",
+        "0x06": "Devil Family",
+        "0x07": "Zombie Family",
+        "0x08": "Material Family",
+        "0x09": "Boss Family"
+    }
+}
