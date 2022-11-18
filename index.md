@@ -175,6 +175,6 @@ Bytes 456-458 store the order of the party. The number is the index of the monst
 
 ## Conclusion and Future To-Do
 
-6212/8192 bytes are known. That leaves 1980 bytes left to decode. This will require further diving into the assembly and tracking where the bytes are coming from and how the game stores those bytes. A lot of these bytes probably do nothing. There are at least 62 bytes of `00` at the end of every save file I've tested. So most likely those are nothing. But more testing is always needed.
+6212/8192 (75%) of the bytes are known. That leaves 1980 bytes left to decode. This will require further diving into the assembly and tracking where the bytes are coming from and how the game stores those bytes. A lot of these bytes probably do nothing. There are at least 62 bytes of `00` at the end of every save file I've tested. So most likely those are nothing. But more testing is always needed.
 
 Last Updated: 11/17/2022
