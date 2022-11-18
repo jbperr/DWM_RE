@@ -20,7 +20,7 @@ Here are the first 128 of 8192 bytes of the the save file. At first, it is a lot
 
  You can see the byte `24` repeated four times from byte 380 to byte 383. So now we know that 'A' is represented by `24`, but what about everything else? Well we could start up a new save file and name ourselves a mix of characters and then record what gets saved as our name. However, that would take a long time compared to if we could just edit the hex and then load the save to view how the name changed. So I tried just that and changed the name bytes to `25 25 25 25`. I loaded up the save to see what happened and was greeted by the game showing me there was no save game to be loaded. This is what happens when the save is corrupted or there is no save to be loaded. This tells me the game uses some kind of checksum to determine validity of a save file. From reading how Pokemon implements a checksum, I hoped it would be some sort of simple sum across the whole file and then that data would be stored somewhere in the file. If it was just a sum, then I could do this to name data  `24 24 23 25` and the game would be none the wiser. 
 
- The checksum would not realize the difference as I added 1 to one byte and subtracted 1 from another byte keeping the net sum change to nothing. After doing that change and crossing my fingers, it worked! I was met by the game thinking my name is `AA B`! So that is what I did for all 255 (`00 - FF`) possible bytes. Now I have a character encoding table to understand better how the game works! You can view the table [here](https://github.com/jbperr/DWM-SRAM-Data-Dive/blob/main/char_encoding.md).
+ The checksum would not realize the difference as I added 1 to one byte and subtracted 1 from another byte keeping the net sum change to nothing. After doing that change and crossing my fingers, it worked! I was met by the game thinking my name is `AA B`! So that is what I did for all 255 (`00 - FF`) possible bytes. Now I have a character encoding table to understand better how the game works! You can view the table [here](https://github.com/jbperr/DWM_RE/blob/main/char_encoding.md).
 
 By figuring out the character encoding, one of my childhood questions had been answered. The default name for the main character in DWM is `TERRY`, but if you want a different name you are limited to only 4 total characters. The encoding table shows why this is a thing. The letters in  `TERRY` are smooshed into 4 tiles so that they can be displayed in 4 bytes. 
 
@@ -32,7 +32,7 @@ Now that the encoding table is done, I can import a text encoding file into my h
 
 Now we can really dig into this save file! But wouldn't it be easier to understand how the save is structured if we could arbitrarily change any byte? Yes!
 
-A json of the character encoding can be found [here](https://github.com/jbperr/DragonWarriorMonstersRE/blob/main/Encoding_Tables/characters.json).
+A json of the character encoding can be found [here](https://github.com/jbperr/DWM_RE/blob/main/Encoding_Tables/characters.json).
 
 It was nice that we could change a byte by changing another byte in the opposite way, however, there are a few limitations on that method. If we instead reversed the checksum, we could do anything to the save file and then generate a checksum that would trick the game into thinking the save is legit. So let's do it!
 
@@ -72,7 +72,7 @@ See? Not too bad, just some syntax to get used to. So, I set a breakpoint to pau
 
 It is important to note that registers `d` and `e` do not start at `00`, they start at `46` and `38` respectively. In steps 3 and 6, the result of the addtion gets stored in registers `d` and `e`. So if we pay attention to these registers at the end of this process and then look for those bytes in the save file we can figure out where the checksum is stored. And that just so happens to be the first two bytes of the file. Right before where the checksum math starts. Perfect!
 
-My next step from here was to implement something quick in Python to simulate this whenever I want to. You can find this [here](https://github.com/jbperr/DragonWarriorMonstersRE/blob/main/checksum.py), but here is the main loop.
+My next step from here was to implement something quick in Python to simulate this whenever I want to. You can find this [here](https://github.com/jbperr/DWM_RE/blob/main/checksum.py), but here is the main loop.
 ```
 for i in range(2, 8192):
     a = save[i] # 1 - LOAD SRAM TO A
@@ -109,11 +109,11 @@ From here on I will go into less detail and just document what I found without a
 
 The first farm section begins at byte 507 and the second farm section begins at byte 4388. Each monster is 149 bytes long. Therefore, in the first farm, the second monster starts at byte 656, the third monster starts at byte 805, etc. There are still some things to figure out, the biggest being the 30 unknown bytes from +101 to +130, but that will eventually be found. My findings can be summarized by this table.
 
- A json with the monster IDs can be found [here](https://github.com/jbperr/DragonWarriorMonstersRE/blob/main/Encoding_Tables/monsters.json).
+ A json with the monster IDs can be found [here](https://github.com/jbperr/DWM_RE/blob/main/Encoding_Tables/monsters.json).
 
- A json with the family IDs can be found [here](https://github.com/jbperr/DragonWarriorMonstersRE/blob/main/Encoding_Tables/family.json).
+ A json with the family IDs can be found [here](https://github.com/jbperr/DWM_RE/blob/main/Encoding_Tables/family.json).
  
- A json with the skill IDs can be found [here](https://github.com/jbperr/DragonWarriorMonstersRE/blob/main/Encoding_Tables/skills.json).
+ A json with the skill IDs can be found [here](https://github.com/jbperr/DWM_RE/blob/main/Encoding_Tables/skills.json).
 
 |  <br>+0 : 507 : 1 byte  	|  <br>Bred/Farm/Party (00/01/02)  	|
 |---	|---	|
@@ -160,7 +160,7 @@ The inventory takes up 20 bytes total between bytes 395-414.
 
 Gold is stored in 3 bytes from 389-391. It is stored little endian. 
 
-A json with the item IDs can be found [here](https://github.com/jbperr/DragonWarriorMonstersRE/blob/main/Encoding_Tables/items.json).
+A json with the item IDs can be found [here](https://github.com/jbperr/DWM_RE/blob/main/Encoding_Tables/items.json).
 
 ### Bank/Vault
 
