@@ -99,7 +99,7 @@ for i in range(2, 8192):
     d = a       # 6 - LOAD A INTO D
 ```
 
-Now that we have total control over how the save validates itself, let's move on and figure out what the rest of the save means.
+Now that we have total control over how the save validates itself, let's move on and figure out what the rest of the save file means.
 
 # Interlude
 
