@@ -151,18 +151,30 @@ The first farm section begins at byte 507 and the second farm section begins at 
 
 
 ### Library
-COMING SOON
+
+Bytes 462-488 (27 bytes) tracks what monsters you have tamed. Each bit in the byte flips to a one when you have tamed that index’s monster. If byte 462 is 0xfe(0b 11111110), then you have caught the first 7 monsters. Similar to how the Pokedex status is [saved](https://bulbapedia.bulbagarden.net/wiki/Save_data_structure_%28Generation_II%29#Pok.C3.A9dex_owned.2C_Pok.C3.A9dex_seen).
+
 ## Inventory
 
 The inventory takes up 20 bytes total between bytes 395-414. 
 
+Gold is stored in 3 bytes from 389-391. It is stored little endian. 
+
 A json with the item IDs can be found [here](https://github.com/jbperr/DragonWarriorMonstersRE/blob/main/Encoding_Tables/items.json).
 
-## Bank/Vault
-COMING SOON
+### Bank/Vault
+
+Bank gold is stored in 3 bytes from 392 to 394. Little endian.
+The inventory vault is stored in 40 bytes from 415 to 454. 
+
 ## Settings
-COMING SOON
-## Conclusion and Future To-D0
-COMING SOON
+
+Byte 40 stores the text speed setting. 1-8 stored as `00` to `07`.
+As said previously, bytes 380 to 383 store the name of the player.
+Bytes 456-458 store the order of the party. The number is the index of the monster stored in the save data. Starts counting from 0 with the monster at 507.
+
+## Conclusion and Future To-Do
+
+6212/8192 bytes are known. That leaves 1980 bytes left to decode. This will require further diving into the assembly and tracking where the bytes are coming from and how the game stores those bytes. A lot of these bytes probably do nothing. There are at least 62 bytes of `00` at the end of every save file I've tested. So most likely those are nothing. But more testing is always needed.
 
 Last Updated: 11/17/2022
